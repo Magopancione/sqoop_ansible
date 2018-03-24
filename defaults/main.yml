@@ -19,6 +19,8 @@ SQOOP_MYSQL_CONNECTOR_VERSION: 5.1.29
 SQOOP_HOME: "{{ HADOOP_COMMON_USER_HOME }}/sqoop"
 SQOOP_CONF: "{{ SQOOP_HOME }}/conf"
 SQOOP_LIB: "{{ SQOOP_HOME }}/lib"
+hadoop_common_env: "/home/analytics/.profile"
+#dest: "/home/{{ hadoop_user }}/{{ profile_file }}"
 
 #
 # vars are namespace with the module name.

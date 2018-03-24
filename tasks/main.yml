@@ -32,6 +32,7 @@
   when: not installed.stat.exists
 
 - name: Distribution extracted
+  become: yes
   unarchive:
     src: "{{ sqoop_temporary_dir }}/{{ sqoop_dist.filename }}"
     dest: "{{ HADOOP_COMMON_USER_HOME }}"
@@ -39,12 +40,14 @@
   when: not installed.stat.exists
 
 - name: Set the Permission
+  become: yes
   shell: chown -R {{ hadoop_common_user }}:{{ hadoop_common_group }} {{ sqoop_base_filename }}
   args:
     chdir: "{{ HADOOP_COMMON_USER_HOME }}"
   when: not installed.stat.exists
 
 - name: Versioned directory symlink created
+  become: yes
   file:
     src: "{{ HADOOP_COMMON_USER_HOME }}/{{ sqoop_base_filename }}"
     dest: "{{ SQOOP_HOME }}"
@@ -60,6 +63,7 @@
   when: not installed.stat.exists
 
 - name: MySQL connector distribution extracted
+  become: yes
   unarchive:
     src: "{{ sqoop_temporary_dir }}/{{ sqoop_mysql_connector_dist.filename }}"
     dest: "{{ sqoop_temporary_dir }}"
@@ -75,12 +79,14 @@
 
 #TODO use copy module with remote_src: True once migrate to Ansible 2.x
 - name: MySQL connector installed
+  become: yes
   shell: "cp mysql-connector-java-{{ SQOOP_MYSQL_CONNECTOR_VERSION }}-bin.jar {{ SQOOP_LIB }}"
   args:
     chdir: "{{ sqoop_temporary_dir }}/mysql-connector-java-{{ SQOOP_MYSQL_CONNECTOR_VERSION }}"
   when: not installed.stat.exists
 
 - name: FIx MySQL connector permission
+  become: yes
   file:
     path: "{{ SQOOP_LIB }}/mysql-connector-java-{{ SQOOP_MYSQL_CONNECTOR_VERSION }}-bin.jar"
     owner: "{{ hadoop_common_user }}"
@@ -88,6 +94,7 @@
   when: not installed.stat.exists
 
 - name: Configuration installed
+  become: yes
   template:
     src: "{{ item }}.j2"
     dest: "{{ SQOOP_CONF }}/{{ item }}"
@@ -98,6 +105,7 @@
     - sqoop-env.sh
 
 - name: env vars sourced in hadoop env
+  become: yes
   lineinfile:
     dest: "{{ hadoop_common_env }}" 
     state: present
